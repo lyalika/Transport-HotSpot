@@ -1,0 +1,120 @@
+@import "~normalize.css/normalize.css";
+@import '~mapbox-gl/dist/mapbox-gl.css';
+@import "@material/textfield/mdc-text-field";
+
+
+body, #map {
+    width: 100vw;
+    height: 100vh;
+}
+
+.close-stops {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}
+
+.search-field {
+    position: absolute;
+    top: 3vh;
+    left: 28px;
+}
+
+.search-field input[type=text] {
+    width: calc(100vw - 60px);
+}
+
+
+.mdc-notched-outline__notch {
+    background-color: #fff;
+}
+
+.demo-text-field-outlined-shaped .mdc-notched-outline .mdc-notched-outline__leading {
+  /* @noflip */
+  border-radius: 28px 0 0 28px;
+  width: 28px;
+  background-color: #fff;
+}
+
+[dir="rtl"] .demo-text-field-outlined-shaped .mdc-notched-outline .mdc-notched-outline__leading, .demo-text-field-outlined-shaped .mdc-notched-outline .mdc-notched-outline__leading[dir="rtl"] {
+    /* @noflip */
+    border-radius: 0 28px 28px 0;
+    background-color: #fff;
+}
+
+.demo-text-field-outlined-shaped .mdc-notched-outline .mdc-notched-outline__trailing {
+  /* @noflip */
+    border-radius: 0 28px 28px 0;
+    background-color: #fff;
+}
+
+[dir="rtl"] .demo-text-field-outlined-shaped .mdc-notched-outline .mdc-notched-outline__trailing, .demo-text-field-outlined-shaped .mdc-notched-outline .mdc-notched-outline__trailing[dir="rtl"] {
+    /* @noflip */
+    border-radius: 28px 0 0 28px;
+    background-color: #fff;
+}
+
+.demo-text-field-outlined-shaped .mdc-text-field__input {
+  /* @noflip */
+  padding-left: 32px;
+  /* @noflip */
+  padding-right: 0;
+}
+
+[dir="rtl"] .demo-text-field-outlined-shaped .mdc-text-field__input, .demo-text-field-outlined-shaped .mdc-text-field__input[dir="rtl"] {
+    /* @noflip */
+    padding-left: 0;
+    /* @noflip */
+    padding-right: 32px;
+}
+
+.demo-text-field-outlined-shaped + .mdc-text-field-helper-text {
+  /* @noflip */
+  margin-left: 32px;
+  /* @noflip */
+  margin-right: 16px;
+}
+
+[dir="rtl"] .demo-text-field-outlined-shaped + .mdc-text-field-helper-text, .demo-text-field-outlined-shaped + .mdc-text-field-helper-text[dir="rtl"] {
+    /* @noflip */
+    margin-left: 16px;
+    /* @noflip */
+    margin-right: 32px;
+}
+
+.mdc-autocomplete .mdc-autocomplete__container{
+    position: absolute;
+    top: 28px;
+    background: white;
+    border-width: 1px;
+    border-color: purple;
+    border-style: solid;
+    border-top-style: none;
+    border-bottom-left-radius: 28px;
+    border-bottom-right-radius: 28px;
+    border-color: rgba(0,0,0,.24);
+
+    left: 0px;
+    padding: 10px 0 0 0;
+    right: 0px;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-autocomplete__container {
+    border-width: 2px;
+    border-color: #6200ee;
+    border-color: var(--mdc-theme-primary, #6200ee);
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled)  {
+    border-color: rgba(0,0,0,.24);
+}
+
+.mdc-select--outlined:not(.mdc-select--disabled):not(.mdc-select--focused) .mdc-select__native-control:hover~.mdc-autocomplete__container,
+.mdc-select--outlined:not(.mdc-select--disabled):not(.mdc-select--focused) .mdc-select__selected-text:hover~.mdc-autocomplete__container {
+    border-color:rgba(0,0,0,.87)
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused) .mdc-text-field__input:hover~.mdc-autocomplete__container,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused) .mdc-text-field__icon:hover~.mdc-autocomplete__container {
+ border-color:rgba(0,0,0,.87)
+}
