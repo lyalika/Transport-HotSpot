@@ -9,11 +9,11 @@
 		<version>2.1.1.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>me.vyara</groupId>
+	<artifactId>transport-hotspot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Transport Hotspot</name>
+	<description>Sofia public transport helper web application</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -35,12 +35,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		
+
 		<dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 	</dependencies>
 
@@ -50,7 +50,58 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.6</version>
+
+				<configuration>
+					<installDirectory>target</installDirectory>
+				</configuration>
+
+				<executions>
+
+					<execution>
+						<id>install node and yarn</id>
+						<goals>
+							<goal>install-node-and-yarn</goal>
+						</goals>
+						<configuration>
+							<nodeVersion>v8.11.1</nodeVersion>
+							<yarnVersion>v1.6.0</yarnVersion>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>yarn install</id>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>webpack build</id>
+						<goals>
+							<goal>webpack</goal>
+						</goals>
+
+						<!-- optional: the default phase is "generate-resources" -->
+						<phase>generate-resources</phase>
+
+						<configuration>
+							<!-- optional: if not specified, it will run webpack's default build 
+								(and you can remove this whole <configuration> section.) -->
+							<arguments>-p</arguments>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
+	<url>https://transport-hotspot.info</url>
 </project>
