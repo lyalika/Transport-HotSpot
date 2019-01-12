@@ -1,4 +1,4 @@
-package entities;
+package me.vyara.transporthotspot.entities;
 
 import java.util.List;
 

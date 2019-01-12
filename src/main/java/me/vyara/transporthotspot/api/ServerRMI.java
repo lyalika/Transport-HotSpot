@@ -1,4 +1,4 @@
-package rmi;
+package me.vyara.transporthotspot.api;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import entities.Line;
-import entities.Stop;
+import me.vyara.transporthotspot.entities.Line;
+import me.vyara.transporthotspot.entities.Stop;
+
+import java.util.Set;
 
 public class ServerRMI implements InterfaceRMI{
 	public ServerRMI() {}

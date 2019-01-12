@@ -18,3 +18,32 @@ mapboxgl.setRTLTextPlugin('https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl
 map.addControl(new MapboxLanguage({
   defaultLanguage: 'mul'
 }));
+
+console.log('hello');
+
+map.on('load', function() {
+    map.addSource('stops', {
+        type: 'geojson',
+        data: '/api/stops'
+    });
+
+    map.addLayer({
+        id: "unclustered-point",
+        type: "circle",
+        source: "stops",
+        paint: {
+            "circle-color": "#11b4da",
+            "circle-radius": 4,
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fff"
+        }
+    });
+
+    map.on('mouseenter', 'unclustered-point', function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.on('mouseleave', 'unclustered-point', function () {
+        map.getCanvas().style.cursor = '';
+    });
+});

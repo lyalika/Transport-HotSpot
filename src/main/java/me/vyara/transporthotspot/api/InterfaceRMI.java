@@ -1,4 +1,4 @@
-package rmi;
+package me.vyara.transporthotspot.api;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import entities.Line;
-import entities.Stop;
+import me.vyara.transporthotspot.entities.Line;
+import me.vyara.transporthotspot.entities.Stop;
 
 public interface InterfaceRMI extends Remote{
 	void updateLines(HashMap<String, String> map) throws RemoteException;
