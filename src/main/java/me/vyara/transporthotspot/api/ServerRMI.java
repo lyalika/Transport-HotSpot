@@ -11,12 +11,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import me.vyara.transporthotspot.entities.Line;
-import me.vyara.transporthotspot.entities.Stop;
+import me.vyara.transporthotspot.entities.*;
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class ServerRMI implements InterfaceRMI{
+	@Autowired
+	private LineRepository lineRepository;
+	
+	@Autowired
+	private StopRepository stopRepository;
+	
 	public ServerRMI() {}
 
 	@Override
@@ -54,21 +61,5 @@ public class ServerRMI implements InterfaceRMI{
 			}
 		}
 		
-	}
-	
-	public static void main(String[] args) {
-		try {
-            ServerRMI obj = new ServerRMI();
-            InterfaceRMI stub = (InterfaceRMI) UnicastRemoteObject.exportObject(obj, 0);
-            
-            // Bind the remote object's stub in the registry
-            Registry registry = LocateRegistry.createRegistry(1099);
-            registry.bind("transport", stub);
-
-            System.err.println("Server ready");
-        } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
-            e.printStackTrace();
-        }
 	}
 }
