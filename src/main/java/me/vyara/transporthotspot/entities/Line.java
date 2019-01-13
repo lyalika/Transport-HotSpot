@@ -12,7 +12,7 @@ public class Line implements Serializable{
 	private static final long serialVersionUID = 9043867412429889255L;
 	@Id
 	public long id;
-	public long transportTypeId;
+	private long transportTypeId;
 	public String transportPrefix;
 	public String name;
 	
@@ -31,5 +31,9 @@ public class Line implements Serializable{
 	@Override
 	public String toString() {
 		return String.format("Line %s of type %s" , name, transportPrefix);
+	}
+	
+	public String humanName() {
+		return name;
 	}
 }

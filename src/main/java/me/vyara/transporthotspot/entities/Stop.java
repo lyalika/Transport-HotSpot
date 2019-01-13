@@ -1,10 +1,13 @@
 package me.vyara.transporthotspot.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.persistence.*;
@@ -38,7 +41,7 @@ public class Stop implements Serializable {
 
 	@Column(name = "location", nullable = false, columnDefinition = "geometry(Point,4326)")
 	private com.vividsolutions.jts.geom.Point location;
-	
+
 	private static final long serialVersionUID = 4537523009397282673L;
 
 	protected Stop() {
@@ -54,14 +57,14 @@ public class Stop implements Serializable {
 		this.location = transform(factory.createPoint(new Coordinate(x, y)));
 	}
 	
+	// @JoinTable(name = "StopsToLines", joinColumns = @JoinColumn(name = "stopId"),
+	// inverseJoinColumns = @JoinColumn(name = "lineId"))
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	public Set<Line> lines = new HashSet<>();
+
 	public void setLines(Set<Line> lines) {
 		this.lines = lines;
 	}
-
-	//@JoinTable(name = "StopsToLines", joinColumns = @JoinColumn(name = "stopId"), inverseJoinColumns = @JoinColumn(name = "lineId"))
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	public Set<Line> lines = new HashSet<>();
-	
 	@OneToMany(mappedBy = "stop")
 	private Set<Arrival> arrivals = new HashSet<>();
 
@@ -73,16 +76,33 @@ public class Stop implements Serializable {
 	public double[] getCoordinatesAsArray() {
 		return new double[] { location.getCoordinate().x, location.getCoordinate().y };
 	}
-
+	
 	public Feature toFeature() {
+		return toFeature(false);
+	}
+
+	public Feature toFeature(boolean withArrivals) {
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put("lines", this.lines);
+		if (withArrivals) {
+			Map<String, Set<String>> simplifiedArrivals = new HashMap<>();
+			this.arrivals.forEach(new Consumer<Arrival>() {
+				@Override
+				public void accept(Arrival arrival) {
+					if (!simplifiedArrivals.containsKey(arrival.getLine().humanName())) {
+						simplifiedArrivals.put(arrival.getLine().humanName(), new TreeSet<>());
+					}
+					simplifiedArrivals.get(arrival.getLine().humanName()).add(arrival.getTimeOfArrival().toString());
+				}
+			});
+			properties.put("arrivals", simplifiedArrivals);
+		}
 		properties.put("name", name);
 		properties.put("number", number);
 
 		return new Feature(id, "Point", new Geometry("Point", getCoordinatesAsArray()), properties);
 	}
-	
+
 	private static Point transform(Point point) {
 		CoordinateReferenceSystem sourceCRS;
 		CoordinateReferenceSystem targetCRS;
@@ -103,4 +123,5 @@ public class Stop implements Serializable {
 		}
 
 	}
+
 }

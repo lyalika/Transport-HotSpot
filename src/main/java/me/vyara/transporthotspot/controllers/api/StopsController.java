@@ -28,7 +28,7 @@ public class StopsController {
 
 	@GetMapping(value = "/api/stops/{id}", produces = "application/json")
 	Feature show(@PathVariable("id") long id) {
-		return stopRepository.findById(id).orElseThrow(() -> new StopNotFoundException(id)).toFeature();
+		return stopRepository.findById(id).orElseThrow(() -> new StopNotFoundException(id)).toFeature(true);
 		// return new Stop(1, 10.0, 0.10, 123, "Foo").toFeature();
 	}
 }

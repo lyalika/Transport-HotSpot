@@ -3,6 +3,28 @@ import './styles/application.scss';
 import mapboxgl from 'mapbox-gl';
 import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import Awesomplete from 'awesomplete';
+import moment from 'moment';
+import bg from 'moment/locale/bg';
+moment.locale('bg');
+document.moment = moment;
+moment.updateLocale('bg', {
+    relativeTime : {
+        future: "след %s",
+        past:   "преди %s",
+        s  : 'няколко секунди',
+        ss : '%d сек',
+        m:  "1 мин.",
+        mm: "%d мин.",
+        h:  "1 ч.",
+        hh: "%d ч.",
+        d:  "1 д.",
+        dd: "%d д.",
+        M:  "1 мес.",
+        MM: "%d мес.",
+        y:  "1 г.",
+        yy: "%d г."
+    }
+});
 
 import {MDCTextField} from '@material/textfield/index';
 const textField = new MDCTextField(document.querySelector('.mdc-text-field'));
@@ -46,39 +68,63 @@ map.on('load', function() {
         map.getCanvas().style.cursor = '';
     });
     
-    // When a click event occurs on a feature in the places layer, open a popup at the
+    // When a click event occurs on a feature in the places layer, open a popup
+	// at the
     // location of the feature, with description HTML from its properties.
-    map.on('click', 'unclustered-point', function (e) {
-        var coordinates = e.features[0].geometry.coordinates.slice();
+    map.on('click', 'unclustered-point', function(e) {
+    	displayPopup(e.features[0], e);
+    });
+});
 
+function displayPopup(feature, e = null) {
+    var coordinates = feature.geometry.coordinates.slice();
+
+    if (e !== null) {
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
         // over the copy being pointed to.
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
+    }
+    
+    const url = '/api/stops/'+feature.id;
+    fetch(url).then(r => r.json()).then(d => {
+        console.log(d);
+        const scheduleTemplate = document.querySelector('#schedule');
+        const scheduleEntryTemplate = document.querySelector('#schedule-entry');
+        const schedule = document.importNode(scheduleTemplate.content, true);
         
-        const url = '/api/stops/'+e.features[0].id;
-        fetch(url).then(r => r.json()).then(d => {
-        	console.log(d);
-            var scheduleTemplate = document.querySelector('#schedule');
-            var scheduleEntryTemplate = document.querySelector('#schedule-entry');
-            var schedule = document.importNode(scheduleTemplate.content, true);
-            
-            var title = schedule.querySelectorAll("h2");
-            title[0].textContent = d.properties.name + ' (' + d.properties.number + ')';
-            
-            var div = document.createElement('div');
-            div.appendChild(schedule);
-            
-            new mapboxgl.Popup()
-                .setLngLat(coordinates)
-                .setHTML(div.innerHTML)
-                .addTo(map);
+        const title = schedule.querySelectorAll("h2")[0];
+        title.textContent = d.properties.name + ' (' + d.properties.number + ')';
+        const arrivals = schedule.querySelectorAll("ul")[0];
+        console.log(d.properties.arrivals);
+        Object.keys(d.properties.arrivals).forEach(function(line){
+            var lineElement = document.importNode(scheduleEntryTemplate.content, true);
+            var lineTitle = lineElement.querySelectorAll(".mdc-list-item__primary-text")[0];
+            lineTitle.textContent = line;
+            var arrivalsElement = lineElement.querySelectorAll(".mdc-list-item__secondary-text")[0];
+            if (d.properties.arrivals[line].length > 0) {
+            	arrivalsElement.textContent = d.properties.arrivals[line].map(function(arrivalTime){
+            		return moment(arrivalTime).toNow(true);
+            	}).join(', ');
+            	// arrivalsElement.textContent = "hello";
+            } else {
+            	arrivalsElement.textContent = "Няма следващо превозно средство";
+            }
+            arrivals.appendChild(lineElement);
         });
+        
+        const div = document.createElement('div');
+        div.appendChild(schedule);
+        
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(div.innerHTML)
+            .addTo(map);
     });
-});
-
+};
+    
 
 const searchInput = document.getElementById("search");
 const searchContainer = document.getElementById("autocomplete-container");
@@ -115,7 +161,7 @@ searchInput.addEventListener("awesomplete-open", function() { searchContainer.hi
 searchInput.addEventListener("awesomplete-close", function() { searchContainer.hidden = true; });
 searchInput.addEventListener("awesomplete-selectcomplete", (ev) => {
 	map.flyTo({center: ev.text.label.coordinates});
-	console.log(ev.text);
+	displayPopup(ev.text.label.feature);
 });
 searchInput.addEventListener('keyup', (e) => {
     var code = (e.keyCode || e.which);      
@@ -128,7 +174,8 @@ searchInput.addEventListener('keyup', (e) => {
         	awesomplete.list = d.features.map(feature => ({value: feature.id, label: {
         		name: feature.properties.name + ' (' + feature.properties.number + ')',
         		lines: feature.properties.lines,
-        		coordinates: feature.geometry.coordinates
+        		coordinates: feature.geometry.coordinates,
+        		feature: feature
         	}}));
         });
     }
