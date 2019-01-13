@@ -15,6 +15,7 @@ import java.util.Map.Entry;
 import me.vyara.transporthotspot.entities.*;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
@@ -54,7 +55,7 @@ public class ServerRMI implements InterfaceRMI{
 	@Transactional
 	public void updateStops(Stop stop, List<Line> lineList) throws RemoteException {
 		Iterator<Line> it = lineList.iterator();
-		Set<Line> set = new HashSet<>();
+		TreeSet<Line> set = new TreeSet<>();
 		while(it.hasNext()) {
 			Line current = it.next();
 			set.add(current);

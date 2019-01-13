@@ -30,7 +30,7 @@ import me.vyara.transporthotspot.viewmodels.Geometry;
 
 @Entity
 @Table(indexes = { @Index(columnList = "name"), @Index(columnList = "number", unique = true) })
-public class Stop implements Serializable {
+public class Stop implements Serializable, Comparable<Stop> {
 
 	@Id
 	private long id;
@@ -60,9 +60,9 @@ public class Stop implements Serializable {
 	// @JoinTable(name = "StopsToLines", joinColumns = @JoinColumn(name = "stopId"),
 	// inverseJoinColumns = @JoinColumn(name = "lineId"))
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	public Set<Line> lines = new HashSet<>();
+	public Set<Line> lines = new TreeSet<>();
 
-	public void setLines(Set<Line> lines) {
+	public void setLines(TreeSet<Line> lines) {
 		this.lines = lines;
 	}
 	@OneToMany(mappedBy = "stop")
@@ -83,9 +83,9 @@ public class Stop implements Serializable {
 
 	public Feature toFeature(boolean withArrivals) {
 		Map<String, Object> properties = new HashMap<String, Object>();
-		properties.put("lines", this.lines);
+		properties.put("lines", new TreeSet<Line>(this.lines));
 		if (withArrivals) {
-			Map<String, Set<String>> simplifiedArrivals = new HashMap<>();
+			Map<String, TreeSet<String>> simplifiedArrivals = new HashMap<>();
 			this.arrivals.forEach(new Consumer<Arrival>() {
 				@Override
 				public void accept(Arrival arrival) {
@@ -124,4 +124,8 @@ public class Stop implements Serializable {
 
 	}
 
+	@Override
+	public int compareTo(Stop other) {
+		return Long.compare(number, other.number);
+	}
 }

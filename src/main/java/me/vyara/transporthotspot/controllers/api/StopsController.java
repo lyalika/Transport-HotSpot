@@ -1,7 +1,7 @@
 package me.vyara.transporthotspot.controllers.api;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.web.bind.annotation.*;
 import me.vyara.transporthotspot.entities.*;
@@ -18,9 +18,14 @@ public class StopsController {
 	}
 
 	@GetMapping(value = "/api/stops", produces = "application/json")
-	FeatureCollection index() {
-		List<Stop> list = new ArrayList<>();
-		stopRepository.findAll().forEach(list::add);
+	FeatureCollection index(@RequestParam(value = "q", required=false) final String q) {
+		Set<Stop> list = new TreeSet<>();
+		
+		if(q == null) {
+			stopRepository.findAll().forEach(list::add);
+		} else {
+			stopRepository.fuzzyFind(q).forEach(list::add);
+		}
 
 		return FeatureCollection
 				.epsg4326FeatureCollection(list.stream().map(stop -> stop.toFeature()).toArray(Feature[]::new));

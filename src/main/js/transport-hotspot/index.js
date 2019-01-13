@@ -76,10 +76,24 @@ map.on('load', function() {
     });
 });
 
-function displayPopup(feature, e = null) {
+function debounce(func, delay) {
+    var inDebounce = void 0;
+    return function () {
+        var context = this;
+        var args = arguments;
+        clearTimeout(inDebounce);
+        inDebounce = setTimeout(function () {
+            return func.apply(context, args);
+        }, delay);
+    };
+};
+
+var popup;
+
+function displayPopup(feature, e = undefined) {
     var coordinates = feature.geometry.coordinates.slice();
 
-    if (e !== null) {
+    if (e !== undefined) {
         // Ensure that if the map is zoomed out such that multiple
         // copies of the feature are visible, the popup appears
         // over the copy being pointed to.
@@ -118,8 +132,11 @@ function displayPopup(feature, e = null) {
         const div = document.createElement('div');
         div.appendChild(schedule);
         
-        new mapboxgl.Popup()
-            .setLngLat(coordinates)
+        if (popup !== undefined) {
+        	popup.remove();
+        }
+        popup = new mapboxgl.Popup();
+        popup.setLngLat(coordinates)
             .setHTML(div.innerHTML)
             .addTo(map);
     });
@@ -129,6 +146,8 @@ function displayPopup(feature, e = null) {
 const searchInput = document.getElementById("search");
 const searchContainer = document.getElementById("autocomplete-container");
 const awesomplete = new Awesomplete(searchInput, {
+	minChars: 3,
+	maxItems: 5,
 	list: [],
 	container: function (input) {
 		return document.getElementById("autocomplete-container");
@@ -143,7 +162,7 @@ const awesomplete = new Awesomplete(searchInput, {
               </span>
               <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text">${match.label.name}</span>
-                <span class="mdc-list-item__secondary-text">${match.label.lines}</span>
+                <span class="mdc-list-item__secondary-text">${match.label.lines.map(function(l){return l.name;})}</span>
               </span>
               <a href="#" class="mdc-list-item__meta material-icons" aria-label="Повече информация" title="Повече информация" onclick="event.preventDefault();"> info </a>
 	      `;
@@ -163,7 +182,7 @@ searchInput.addEventListener("awesomplete-selectcomplete", (ev) => {
 	map.flyTo({center: ev.text.label.coordinates});
 	displayPopup(ev.text.label.feature);
 });
-searchInput.addEventListener('keyup', (e) => {
+searchInput.addEventListener('keyup', debounce(function(e) {
     var code = (e.keyCode || e.which);      
     if (code === 37 || code === 38 || code === 39 || code === 40 || code === 27 || code === 13) {
         return;
@@ -179,4 +198,4 @@ searchInput.addEventListener('keyup', (e) => {
         	}}));
         });
     }
-});
+}));
