@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -53,9 +54,12 @@ public class Stop implements Serializable {
 		this.location = transform(factory.createPoint(new Coordinate(x, y)));
 	}
 
+	//@JoinTable(name = "StopsToLines", joinColumns = @JoinColumn(name = "stopId"), inverseJoinColumns = @JoinColumn(name = "lineId"))
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "StopsToLines", joinColumns = @JoinColumn(name = "stopId"), inverseJoinColumns = @JoinColumn(name = "lineId"))
-	private Set<Line> lines = new HashSet<>();
+	public Set<Line> lines = new HashSet<>();
+	
+	@OneToMany(mappedBy = "stop")
+	private Set<Arrival> arrivals = new HashSet<>();
 
 	@Override
 	public String toString() {
@@ -67,10 +71,13 @@ public class Stop implements Serializable {
 	}
 
 	public Feature toFeature() {
-		Map<String, Object> options = new HashMap<String, Object>();
-		options.put("lines", new int[] { 1, 2, 3 });
+		Map<String, Object> properties = new HashMap<String, Object>();
+		properties.put("lines", this.lines);
+		properties.put("arrivals", this.arrivals.stream().collect(Collectors.groupingBy(Arrival::getLine::getId, Collectors.toSet())));
+		properties.put("name", name);
+		properties.put("number", number);
 
-		return new Feature(id, "Point", new Geometry("Point", getCoordinatesAsArray()), options);
+		return new Feature(id, "Point", new Geometry("Point", getCoordinatesAsArray()), properties);
 	}
 	
 	private static Point transform(Point point) {

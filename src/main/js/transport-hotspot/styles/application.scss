@@ -1,7 +1,7 @@
 @import "~normalize.css/normalize.css";
 @import '~mapbox-gl/dist/mapbox-gl.css';
 @import "@material/textfield/mdc-text-field";
-
+@import "@material/list/mdc-list";
 
 body, #map {
     width: 100vw;
@@ -97,6 +97,21 @@ body, #map {
     left: 0px;
     padding: 10px 0 0 0;
     right: 0px;
+    
+    ul {
+        @extend .mdc-list;
+        @extend .mdc-list--two-line;
+        @extend .mdc-list--avatar-list;
+    }
+}
+
+.mdc-autocomplete__container [hidden] {
+    display: none;
+}
+
+.mdc-autocomplete__container .visually-hidden {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
 }
 
 .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-autocomplete__container {
@@ -118,3 +133,5 @@ body, #map {
 .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused) .mdc-text-field__icon:hover~.mdc-autocomplete__container {
  border-color:rgba(0,0,0,.87)
 }
+
+

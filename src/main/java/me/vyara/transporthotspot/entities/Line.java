@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 @Entity
+@Table(indexes = { @Index(columnList = "name") })
 public class Line implements Serializable{
 	private static final long serialVersionUID = 9043867412429889255L;
 	@Id
@@ -16,7 +17,7 @@ public class Line implements Serializable{
 	public String name;
 	
 	@ManyToMany(mappedBy = "lines")
-	private Set<Stop> posts = new HashSet<>();
+	private Set<Stop> stops = new HashSet<>();
 	
 	protected Line() {}
 	

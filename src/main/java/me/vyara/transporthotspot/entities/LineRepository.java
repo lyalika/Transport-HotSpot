@@ -3,6 +3,6 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface LineRepository extends CrudRepository<Line, Integer>{
+public interface LineRepository extends CrudRepository<Line, Long>{
 	List<Line> findByName(String lineName);
 }

@@ -1,36 +1,53 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Transport Hot Spot</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link href="/webjars/Transport-HotSpot/0.0.1-SNAPSHOT/app.css"
-	                  rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-	      <div id='map'></div>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="/webjars/Transport-HotSpot/0.0.1-SNAPSHOT/app.css"
+	rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+	<div id='map'></div>
 
-	      <div
-		        class="search-field mdc-text-field mdc-autocomplete text-field demo-text-field-outlined-shaped mdc-text-field--outlined mdc-text-field--with-trailing-icon">
-		        <input type="text" id="text-field-shape-three"
-			                   class="mdc-text-field__input"> <i
-			                                                      class="material-icons mdc-text-field__icon">search</i>
-		        <div class="mdc-notched-outline mdc-notched-outline--upgraded">
-			          <div class="mdc-notched-outline__leading"></div>
-			          <div class="mdc-notched-outline__notch">
-				            <label class="mdc-floating-label" for="text-field-shape-three"
-					                        style="">Търсене</label>
-			          </div>
-			          <div class="mdc-notched-outline__trailing"></div>
+	<div
+		class="search-field mdc-text-field mdc-autocomplete text-field demo-text-field-outlined-shaped mdc-text-field--outlined mdc-text-field--with-trailing-icon">
+		<input type="text" id="search" class="mdc-text-field__input">
+		<i class="material-icons mdc-text-field__icon">search</i>
+		<div class="mdc-notched-outline mdc-notched-outline--upgraded">
+			<div class="mdc-notched-outline__leading"></div>
+			<div class="mdc-notched-outline__notch">
+				<label class="mdc-floating-label" for="search" style="">Търсене</label>
+			</div>
+			<div class="mdc-notched-outline__trailing"></div>
 
 
-		        </div>
-	      </div>
-	      <script src="/webjars/Transport-HotSpot/0.0.1-SNAPSHOT/app.js"></script>
-    </body>
+		</div>
+		<div id="autocomplete-container" class='mdc-autocomplete__container' hidden=""></div>
+	</div>
+	<template id="schedule">
+        <h2 id="schedule-title"></h2>
+        <ul class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+
+        </ul>
+    </template>
+    <template id="schedule-entry">
+            <li class="mdc-list-item">
+                <span class="mdc-list-item__graphic" role="presentation">
+                    <i class="material-icons" aria-hidden="true">directions_bus</i>
+                </span>
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text"></span>
+                    <span class="mdc-list-item__secondary-text"></span>
+                </span>
+            </li>
+    </template>
+	<script src="/webjars/Transport-HotSpot/0.0.1-SNAPSHOT/app.js"></script>
+</body>
 </html>

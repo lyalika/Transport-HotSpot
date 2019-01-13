@@ -22,13 +22,13 @@ public class StopsController {
 		List<Stop> list = new ArrayList<>();
 		stopRepository.findAll().forEach(list::add);
 
-		return FeatureCollection.epsg4326FeatureCollection(list.stream().map(stop -> stop.toFeature()).toArray(Feature[]::new));
+		return FeatureCollection
+				.epsg4326FeatureCollection(list.stream().map(stop -> stop.toFeature()).toArray(Feature[]::new));
 	}
-	
+
 	@GetMapping(value = "/api/stops/{id}", produces = "application/json")
 	Feature show(@PathVariable("id") long id) {
-		// return stopRepository.findById(id).orElseThrow(() -> new
-		// StopNotFoundException(id));
-		return new Stop(1, 10.0, 0.10, 123, "Foo").toFeature();
+		return stopRepository.findById(id).orElseThrow(() -> new StopNotFoundException(id)).toFeature();
+		// return new Stop(1, 10.0, 0.10, 123, "Foo").toFeature();
 	}
 }

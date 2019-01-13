@@ -4,7 +4,9 @@
 	"version": "0.0.1-SNAPSHOT",
 	"dependencies": {
 		"@mapbox/mapbox-gl-language": "^0.10.0",
+		"@material/list": "^0.43.0",
 		"@material/textfield": "^0.42.1",
+		"awesomplete": "^1.1.4",
 		"mapbox-gl": "^0.52.0",
 		"normalize.css": "^8.0.1",
 		"webpack": "^4.28.3",
