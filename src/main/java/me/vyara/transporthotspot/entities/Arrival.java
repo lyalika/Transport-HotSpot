@@ -51,6 +51,6 @@ public class Arrival implements Serializable {
 	public Arrival(Stop stop, Line line, LocalDateTime timeOfArrival) {
 		this.stop = stop;
 		this.line = line;
-		this.timeOfArrival = LocalDateTime.now();
+		this.timeOfArrival = timeOfArrival;
 	}
 }

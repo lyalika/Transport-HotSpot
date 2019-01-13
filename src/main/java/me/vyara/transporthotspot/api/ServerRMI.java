@@ -67,7 +67,7 @@ public class ServerRMI implements InterfaceRMI{
 	@Override
 	public void updateTimetableForStop(long stopCode, HashMap<String, List<LocalDateTime>> timeTable) throws RemoteException {
 		Stop stop= stopRepository.findByNumber(stopCode);
-		
+		arrivalRepository.deleteByStop(stop);
 		Set<Entry<String, List<LocalDateTime>>> set = timeTable.entrySet();
 		Iterator it = set.iterator();
 		while(it.hasNext()) {
