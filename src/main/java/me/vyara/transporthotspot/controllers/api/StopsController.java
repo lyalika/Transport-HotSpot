@@ -1,5 +1,8 @@
 package me.vyara.transporthotspot.controllers.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.*;
 import me.vyara.transporthotspot.entities.*;
 import me.vyara.transporthotspot.exceptions.StopNotFoundException;
@@ -16,10 +19,10 @@ public class StopsController {
 
 	@GetMapping(value = "/api/stops", produces = "application/json")
 	FeatureCollection index() {
-		//return stopRepository.findAll();
-		//Feature stop = new Stop(1, 2596182.03, 5266071.32, 123, "Foo").toFeature();
-		Feature stop = new Stop(1,  23.3219, 42.6977, 123, "Foo").toFeature();
-		return FeatureCollection.epsg4326FeatureCollection(new Feature[] {stop});
+		List<Stop> list = new ArrayList<>();
+		stopRepository.findAll().forEach(list::add);
+
+		return FeatureCollection.epsg4326FeatureCollection(list.stream().map(stop -> stop.toFeature()).toArray(Feature[]::new));
 	}
 	
 	@GetMapping(value = "/api/stops/{id}", produces = "application/json")
