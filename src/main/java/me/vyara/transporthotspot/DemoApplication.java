@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import me.vyara.transporthotspot.api.InterfaceRMI;
 import me.vyara.transporthotspot.api.ServerRMI;
 import me.vyara.transporthotspot.entities.LineRepository;
+import me.vyara.transporthotspot.entities.StopRepository;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -25,17 +26,17 @@ public class DemoApplication {
 	}
 	
 	@Bean
-	public CommandLineRunner rmiApiServer() {
+	public CommandLineRunner rmiApiServer(StopRepository stopRepository, LineRepository lineRepository) {
 		return (args) -> {
 			try {
-	            ServerRMI obj = new ServerRMI();
+	            ServerRMI obj = new ServerRMI(stopRepository, lineRepository);
 	            InterfaceRMI stub = (InterfaceRMI) UnicastRemoteObject.exportObject(obj, 0);
 	            
 	            // Bind the remote object's stub in the registry
 	            Registry registry = LocateRegistry.createRegistry(1099);
 	            registry.bind("transport", stub);
 
-	            log.debug("Server ready");
+	            System.err.print("Server ready");
 	        } catch (Exception e) {
 	            log.error("Server exception: " + e.toString());
 	            e.printStackTrace();

@@ -11,7 +11,7 @@ import me.vyara.transporthotspot.entities.Line;
 import me.vyara.transporthotspot.entities.Stop;
 
 public interface InterfaceRMI extends Remote{
-	void updateLines(HashMap<String, String> map) throws RemoteException;
+	void updateLines(List<Line> lineList) throws RemoteException;
 	void updateStops(Stop stop, List<Line> lineList) throws RemoteException;
 	void updateTimetableForStop(long stopCode, HashMap<String, List<LocalDateTime>> timeTable) throws RemoteException;
 }
