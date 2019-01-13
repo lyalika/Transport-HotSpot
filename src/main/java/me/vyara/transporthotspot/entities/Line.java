@@ -25,7 +25,7 @@ public class Line implements Serializable{
 		this.id = id;
 		this.transportTypeId = transportType;
 		this.transportPrefix = transportPrefix;
-		this.name = name;
+		this.name = transportPrefix + name;
 	}
 	
 	@Override

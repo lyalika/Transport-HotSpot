@@ -53,6 +53,10 @@ public class Stop implements Serializable {
 		GeometryFactory factory = new GeometryFactory(new PrecisionModel(), 3857);
 		this.location = transform(factory.createPoint(new Coordinate(x, y)));
 	}
+	
+	public void setLines(Set<Line> lines) {
+		this.lines = lines;
+	}
 
 	//@JoinTable(name = "StopsToLines", joinColumns = @JoinColumn(name = "stopId"), inverseJoinColumns = @JoinColumn(name = "lineId"))
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -73,7 +77,6 @@ public class Stop implements Serializable {
 	public Feature toFeature() {
 		Map<String, Object> properties = new HashMap<String, Object>();
 		properties.put("lines", this.lines);
-		properties.put("arrivals", this.arrivals.stream().collect(Collectors.groupingBy(Arrival::getLine::getId, Collectors.toSet())));
 		properties.put("name", name);
 		properties.put("number", number);
 

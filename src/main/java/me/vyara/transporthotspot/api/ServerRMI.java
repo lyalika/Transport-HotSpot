@@ -27,9 +27,13 @@ public class ServerRMI implements InterfaceRMI{
 	@Autowired
 	private StopRepository stopRepository;
 	
-	public ServerRMI(StopRepository stopR, LineRepository lineR) {
+	@Autowired
+	private ArrivalRepository arrivalRepository;
+	
+	public ServerRMI(StopRepository stopR, LineRepository lineR, ArrivalRepository arrivalRepository) {
 		this.lineRepository = lineR;
 		this.stopRepository = stopR;
+		this.arrivalRepository = arrivalRepository;
 	}
 
 	@Override
@@ -62,17 +66,19 @@ public class ServerRMI implements InterfaceRMI{
 	
 	@Override
 	public void updateTimetableForStop(long stopCode, HashMap<String, List<LocalDateTime>> timeTable) throws RemoteException {
-		System.out.println("Timetable for stop " + stopCode);
-		Set<Entry<String,List<LocalDateTime>>> setList = timeTable.entrySet();
-		Iterator it = setList.iterator();
+		Stop stop= stopRepository.findByNumber(stopCode);
+		
+		Set<Entry<String, List<LocalDateTime>>> set = timeTable.entrySet();
+		Iterator it = set.iterator();
 		while(it.hasNext()) {
-			Entry<String, List<LocalDateTime>> current = (Entry<String, List<LocalDateTime>>) it.next();
-			System.out.println("Bus number " + current.getKey());
-			System.out.println("Times of arrival: ");
-			Iterator<LocalDateTime> timeIt = current.getValue().iterator();
-			while(timeIt.hasNext()) {
-				LocalDateTime currentTime = timeIt.next();
-				System.out.println(currentTime);
+			Entry<String, List<LocalDateTime>> entry = (Entry<String, List<LocalDateTime>>) it.next();
+			String vehicleName = entry.getKey();
+			List<LocalDateTime> timeList = entry.getValue();
+			Iterator<LocalDateTime> it2 = timeList.iterator();
+			while(it2.hasNext()) {
+				LocalDateTime currentTime = it2.next();
+				Line currentLine = lineRepository.findByName(vehicleName);
+				arrivalRepository.save(new Arrival(stop, currentLine, currentTime));
 			}
 		}
 		
